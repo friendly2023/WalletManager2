@@ -3,6 +3,7 @@ package com.example.walletmanager2.service;
 import com.example.walletmanager2.dto.WalletOperationRequest;
 import com.example.walletmanager2.entity.Wallet;
 import com.example.walletmanager2.enums.OperationType;
+import com.example.walletmanager2.exception.InsufficientFundsException;
 import com.example.walletmanager2.repository.WalletRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,28 +25,35 @@ public class WalletService {
 
     public void updateWallet(WalletOperationRequest walletOperationRequest) {
 
-        //преобразование в нужный формат
         UUID walletId = UUID.fromString(walletOperationRequest.getWalletId());
         OperationType operationType = OperationType.valueOf(walletOperationRequest.getOperationType());
-        BigDecimal amount = new BigDecimal(walletOperationRequest.getAmount());
+        BigDecimal amount = walletOperationRequest.getAmount();
 
-        Wallet wallet = walletRepository. getWalletByUUID(walletId);
+        Wallet wallet = walletRepository.getWalletByUUID(walletId);
 
-        //операции
-        BigDecimal newBalance = updateWalletBalance(amount, wallet.getBalance(), operationType);
+        BigDecimal newBalance = updateWalletBalance(amount, wallet, operationType);
 
-        //сохранение
         wallet.setBalance(newBalance);
         walletRepository.save(wallet);
     }
 
 
-    private BigDecimal updateWalletBalance(BigDecimal amount, BigDecimal balance, OperationType operationType) {
+    private BigDecimal updateWalletBalance(BigDecimal amount, Wallet wallet, OperationType operationType) {
+
+        BigDecimal balance = wallet.getBalance();
 
         switch (operationType) {
-            case DEPOSIT -> balance = balance.add(amount);
-            case WITHDRAW -> balance = balance.subtract(amount);
+            case DEPOSIT:
+                balance = balance.add(amount);
+                return balance;
+
+            case WITHDRAW:
+                if (balance.subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
+                    throw new InsufficientFundsException(wallet.getId());
+                }
+                balance = balance.subtract(amount);
+                return balance;
         }
-        return balance;
+        return null;
     }
 }

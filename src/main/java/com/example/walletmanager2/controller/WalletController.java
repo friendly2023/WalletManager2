@@ -27,5 +27,6 @@ public class WalletController {
     @PostMapping(value = "/wallet")
     public void applyOperation(@Valid @RequestBody WalletOperationRequest walletOperationRequest) {
 
+        walletService.updateWallet(walletOperationRequest);
     }
 }
