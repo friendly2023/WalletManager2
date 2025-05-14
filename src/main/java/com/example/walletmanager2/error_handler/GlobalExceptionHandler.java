@@ -1,6 +1,7 @@
 package com.example.walletmanager2.error_handler;
 
 import com.example.walletmanager2.exception.InsufficientFundsException;
+import com.example.walletmanager2.exception.WalletNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,10 +26,10 @@ public class GlobalExceptionHandler {
         return new ValidationErrorResponse(violations);
     }
 
-    @ExceptionHandler(InsufficientFundsException.class)
+    @ExceptionHandler({InsufficientFundsException.class, WalletNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ValidationErrorResponse handleInsufficientFundsException(InsufficientFundsException ex) {
+    public ValidationErrorResponse handleInsufficientFundsException(RuntimeException ex) {
 
         List<Violation> violations = List.of(new Violation("walletId", ex.getMessage()));
 
