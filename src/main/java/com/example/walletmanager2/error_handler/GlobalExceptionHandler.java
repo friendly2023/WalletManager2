@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({InsufficientFundsException.class, WalletNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ValidationErrorResponse handleInsufficientFundsException(RuntimeException ex) {
+    public ValidationErrorResponse handleWalletExceptions(RuntimeException ex) {
 
         List<Violation> violations = List.of(new Violation("walletId", ex.getMessage()));
 

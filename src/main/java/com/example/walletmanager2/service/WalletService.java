@@ -37,23 +37,16 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
-
     private BigDecimal updateWalletBalance(BigDecimal amount, Wallet wallet, OperationType operationType) {
-
         BigDecimal balance = wallet.getBalance();
 
-        switch (operationType) {
-            case DEPOSIT:
-                balance = balance.add(amount);
-                return balance;
-
-            case WITHDRAW:
-                if (balance.subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
-                    throw new InsufficientFundsException(wallet.getId());
-                }
-                balance = balance.subtract(amount);
-                return balance;
+        if (operationType == OperationType.DEPOSIT) {
+            return balance.add(amount);
+        } else {
+            if (balance.subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
+                throw new InsufficientFundsException(wallet.getId());
+            }
+            return balance.subtract(amount);
         }
-        return null;
     }
 }
