@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,4 +57,13 @@ public class WalletControllerTest {
         verify(walletService, times(1)).updateWallet(any(WalletOperationRequest.class));
     }
 
+    @Test
+    void getWalletTest() throws Exception {
+        String walletId = "f54e3b9f-1262-4a2f-9236-53d74da89344";
+
+        mockMvc.perform(get("/api/v1/wallets/{walletId}", walletId))
+                .andExpect(status().isOk());
+
+        verify(walletService, times(1)).getWalletByUUID(walletId);
+    }
 }

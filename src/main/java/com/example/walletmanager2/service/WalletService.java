@@ -37,6 +37,11 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
+    public Wallet getWalletByUUID(String walletId) {
+
+        return walletRepository.getWalletByUUID(UUID.fromString(walletId));
+    }
+
     private BigDecimal updateWalletBalance(BigDecimal amount, Wallet wallet, OperationType operationType) {
         BigDecimal balance = wallet.getBalance();
 

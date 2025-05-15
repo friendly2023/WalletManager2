@@ -55,6 +55,16 @@ public class WalletServiceTest {
     }
 
     @Test
+    void getWalletByUUIDTest() {
+        WalletOperationRequest request = createRequest();
+        String walletId = request.getWalletId();
+
+        walletService.getWalletByUUID(walletId);
+
+        verify(walletRepository, times(1)).getWalletByUUID(UUID.fromString(walletId));
+    }
+
+    @Test
     void updateWalletWITHDRAW_thenNoViolations() throws Exception {
         WalletOperationRequest request = createRequest();
         request.setOperationType(String.valueOf(WITHDRAW));
