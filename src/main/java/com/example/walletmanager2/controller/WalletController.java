@@ -1,7 +1,10 @@
 package com.example.walletmanager2.controller;
 
+import com.example.walletmanager2.dto.WalletOperationRequest;
 import com.example.walletmanager2.service.WalletService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,5 +22,11 @@ public class WalletController {
     public void creatingNewWallet() {
 
         walletService.createWallet();
+    }
+
+    @PostMapping(value = "/wallet")
+    public void applyOperation(@Valid @RequestBody WalletOperationRequest walletOperationRequest) {
+
+        walletService.updateWallet(walletOperationRequest);
     }
 }
