@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 public class WalletService {
 
-    private WalletRepository walletRepository;
+    private final WalletRepository walletRepository;
 
     public WalletService(WalletRepository walletRepository) {
         this.walletRepository = walletRepository;
@@ -25,9 +25,9 @@ public class WalletService {
 
     public void updateWallet(WalletOperationRequest walletOperationRequest) {
 
-        UUID walletId = UUID.fromString(walletOperationRequest.getWalletId());
-        OperationType operationType = OperationType.valueOf(walletOperationRequest.getOperationType());
-        BigDecimal amount = walletOperationRequest.getAmount();
+        UUID walletId = UUID.fromString(walletOperationRequest.walletId());
+        OperationType operationType = OperationType.valueOf(walletOperationRequest.operationType());
+        BigDecimal amount = walletOperationRequest.amount();
 
         Wallet wallet = walletRepository.getWalletByUUID(walletId);
 

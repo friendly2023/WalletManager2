@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @AutoConfigureMockMvc
 @WebMvcTest(WalletController.class)
 public class WalletControllerTest {
@@ -38,10 +39,6 @@ public class WalletControllerTest {
 
     @Test
     void applyOperationTest() throws Exception {
-        WalletOperationRequest request = new WalletOperationRequest();
-        request.setWalletId("f54e3b9f-1262-4a2f-9236-53d74da89344");
-        request.setOperationType("DEPOSIT");
-        request.setAmount(new BigDecimal("10.00"));
 
         mockMvc.perform(post("/api/v1/wallet")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -38,9 +38,13 @@ public class WalletServiceTest {
     }
 
     @Test
-    void updateWalletDEPOSIT_thenNoViolations() throws Exception {
-        WalletOperationRequest request = createRequest();
-        UUID walletId = UUID.fromString(request.getWalletId());
+    void updateWalletDEPOSIT_thenNoViolations() {
+        WalletOperationRequest request = new WalletOperationRequest(
+                "f54e3b9f-1262-4a2f-9236-53d74da89344",
+                "DEPOSIT",
+                new BigDecimal("10.00")
+        );
+        UUID walletId = UUID.fromString(request.walletId());
 
         Wallet wallet1 = createWallet();
 
@@ -56,8 +60,12 @@ public class WalletServiceTest {
 
     @Test
     void getWalletByUUIDTest() {
-        WalletOperationRequest request = createRequest();
-        String walletId = request.getWalletId();
+        WalletOperationRequest request = new WalletOperationRequest(
+                "f54e3b9f-1262-4a2f-9236-53d74da89344",
+                "DEPOSIT",
+                new BigDecimal("10.00")
+        );
+        String walletId = request.walletId();
 
         walletService.getWalletByUUID(walletId);
 
@@ -65,10 +73,13 @@ public class WalletServiceTest {
     }
 
     @Test
-    void updateWalletWITHDRAW_thenNoViolations() throws Exception {
-        WalletOperationRequest request = createRequest();
-        request.setOperationType(String.valueOf(WITHDRAW));
-        UUID walletId = UUID.fromString(request.getWalletId());
+    void updateWalletWITHDRAW_thenNoViolations() {
+        WalletOperationRequest request = new WalletOperationRequest(
+                "f54e3b9f-1262-4a2f-9236-53d74da89344",
+                String.valueOf(WITHDRAW),
+                new BigDecimal("10.00")
+        );
+        UUID walletId = UUID.fromString(request.walletId());
 
         Wallet wallet1 = createWallet();
         wallet1.setBalance(BigDecimal.valueOf(100));
@@ -84,10 +95,13 @@ public class WalletServiceTest {
     }
 
     @Test
-    void updateWallet_thenViolations() throws Exception {
-        WalletOperationRequest request = createRequest();
-        request.setOperationType(String.valueOf(WITHDRAW));
-        UUID walletId = UUID.fromString(request.getWalletId());
+    void updateWallet_thenViolations() {
+        WalletOperationRequest request = new WalletOperationRequest(
+                "f54e3b9f-1262-4a2f-9236-53d74da89344",
+                String.valueOf(WITHDRAW),
+                new BigDecimal("10.00")
+        );
+        UUID walletId = UUID.fromString(request.walletId());
 
         Wallet wallet = createWallet();
 
@@ -95,14 +109,6 @@ public class WalletServiceTest {
 
         assertThrows(InsufficientFundsException.class,
                 () -> walletService.updateWallet(request));
-    }
-
-    private WalletOperationRequest createRequest() {
-        WalletOperationRequest request = new WalletOperationRequest();
-        request.setWalletId("f54e3b9f-1262-4a2f-9236-53d74da89344");
-        request.setOperationType("DEPOSIT");
-        request.setAmount(new BigDecimal("10.00"));
-        return request;
     }
 
     private Wallet createWallet() {
